@@ -1,0 +1,33 @@
+
+
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Junior276
+      MYSQL_DATABASE: chat_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Junior276
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    build: 
+      context: .
+    image: chat_image
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql+pymysql://root:Junior276@db:3306/chat_db
+      SECRET_KEY: 6f2a87b0f3f1a6e2c5b84711f9d6a80ccf5c412fbf7e9e8d96b4d2a03b6c27b1
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+volumes:
+  db_data:
